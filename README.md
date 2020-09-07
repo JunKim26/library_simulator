@@ -18,13 +18,13 @@ Here are descriptions of the three classes:
 **Book/Album/Movie:**
 * These three classes all inherit from LibraryItem.
 * All three has a method called get_check_out_length that returns the number of days that type of library item may be checked out for.  For a Book it's 21 days, for an Album it's 14 days, and for a Movie it's 7 days.
-* All three will have an additional field.  For Book, it's a string field called author.  For Album, it's a string field called artist.  For Movie, it's a string field called director.  There will also need to be get methods to return the values of these fields.
+* All three will have an additional field.  For Book, it's a string field called author.  For Album, it's a string field called artist.  For Movie, it's a string field called director.  
  
 **Patron:**
 * patron_id - a unique identifier for a Patron
 * name 
 * checked_out_items - a collection of LibraryItems that a Patron currently has checked out
-* fine_amount - how much the Patron owes the Library in late fines (measured in dollars); this is allowed to go negative
+* fine_amount - how much the Patron owes the Library in late fines (measured in dollars); this is allowed to go negative (which could be used as credit)
 * init method - takes a patron ID and name
 * get_fine_amount - returns the fine_amount
 * add_library_item - adds the specified LibraryItem to checked_out_items

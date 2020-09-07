@@ -236,37 +236,36 @@ class Library:
 
         #conditions for if the library item is not able to be checked out for various reasons
 
-        if self.get_patron_from_id(patronID) not in self._members:
+        item = self.get_library_item_from_id(itemID)
+        patron = self.get_patron_from_id(patronID)
+
+        if patron not in self._members:
             return "patron not found"
 
-        if self.get_library_item_from_id(itemID) not in self._holdings:
+        if item not in self._holdings:
             return "item not found"
 
-        if self.get_library_item_from_id(itemID).get_location() == "CHECKED_OUT":
+        if item.get_location() == "CHECKED_OUT":
             return "item already checked out"
 
-        if self.get_library_item_from_id(itemID).get_location() == "ON_HOLD_SHELF":
-            return "item on hold by other patron"
+        if item.get_location() == "ON_HOLD_SHELF":
+            if patron != item.get_requested_by():
+                return "item on hold by other patron"
+
+            else:
+                pass
 
         #If the library item is able to be checked out...
 
         # If the patron is someone who requested the item, then clear the patron's request for the item
-        item = self.get_library_item_from_id(itemID)
-        if self.get_patron_from_id(patronID) == item.get_requested_by():
-            item.get_requested_by = None
 
-        patron = self.get_patron_from_id(patronID)
+        item.set_checked_out_by(patron)
 
-        self.get_library_item_from_id(itemID).set_checked_out_by(patron)
+        item.set_date_checked_out(self._current_date)
 
-        self.get_library_item_from_id(itemID).set_date_checked_out(self._current_date)
+        item.set_location("CHECKED_OUT")
 
-        self.get_library_item_from_id(itemID).set_location("CHECKED_OUT")
-
-        patron = self.get_patron_from_id(patronID)
-        libraryitem = self.get_library_item_from_id(itemID)
-
-        patron.add_checked_out_items(libraryitem)
+        patron.add_checked_out_items(item)
 
         return "check out successful"
 
@@ -274,16 +273,17 @@ class Library:
     def return_library_item(self,itemID):
         """Returning a library item"""
 
-        if self.get_library_item_from_id(itemID) not in self._holdings: #if item is not in holdings list
+        libraryitem = self.get_library_item_from_id(itemID)
+
+        if libraryitem not in self._holdings: #if item is not in holdings list
 
             return "item not found"
 
-        if self.get_library_item_from_id(itemID).get_location() != "CHECKED_OUT":
+        if libraryitem.get_location() != "CHECKED_OUT":
 
             return "item already in library"
 
         #update the Patron's checked_out_items by using Library item ID
-        libraryitem = self.get_library_item_from_id(itemID)
 
         for patron in self._members: # find out which member checked out the library item
 
@@ -291,13 +291,13 @@ class Library:
 
                 patron.remove_library_item(libraryitem)
 
-        if libraryitem.get_requested_by() == None: #If item is not requested put on shelf
-
-            libraryitem.set_location("ON_SHELF")
-
         if libraryitem.get_requested_by() != None: #If item is requested put on hold shelf
 
             libraryitem.set_location("ON_HOLD_SHELF")
+
+        else: #If item is not requested put on shelf
+
+            libraryitem.set_location("ON_SHELF")
 
         libraryitem.set_checked_out_by(None)
 
@@ -307,8 +307,9 @@ class Library:
         """Requesting library item given patron and library item ID"""
 
         libraryitem = self.get_library_item_from_id(itemID)
+        patron = self.get_patron_from_id(patronID)
 
-        if self.get_patron_from_id(patronID) not in self._members:
+        if patron not in self._members:
             return "patron not found"
 
         if libraryitem not in self._holdings:
@@ -317,7 +318,7 @@ class Library:
         if libraryitem.get_requested_by() != None:
             return "item already on hold"
 
-        libraryitem.set_requested_by(self.get_patron_from_id(patronID)) #update item requested by status
+        libraryitem.set_requested_by(patron) #update item requested by status
 
         if libraryitem.get_location() == "ON_SHELF":
             libraryitem.set_location("ON_HOLD_SHELF")
@@ -351,3 +352,34 @@ class Library:
 
                     patron.amend_fine(0.10) #adds 10 cents to fine per item
 
+
+
+#Example Usage
+b1 = Book("345", "Phantom Tollbooth", "Juster")
+a1 = Album("456", "...And His Orchestra", "The Fastbacks")
+m1 = Movie("567", "Laputa", "Miyazaki")
+
+p1 = Patron("abc", "Felicity")
+p2 = Patron("bcd", "Waldo")
+
+lib = Library()
+lib.add_library_item(b1)
+lib.add_library_item(a1)
+lib.add_library_item(m1)
+lib.add_patron(p1)
+lib.add_patron(p2)
+
+print(lib.request_library_item("abc", "456"))
+print(a1.get_location())
+print(lib.check_out_library_item("bcd", "456"))
+print(lib.check_out_library_item("abc", "456"))
+print(a1.get_location())
+
+
+for i in range(57):
+    lib.increment_current_date()  # 57 days pass
+
+p1_fine = p1.get_fine_amount()
+print(p1_fine)
+print(lib.pay_fine("bcd", p1_fine))
+print(lib.return_library_item("456"))
