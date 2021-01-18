@@ -201,14 +201,14 @@ class Library:
     def get_library_item_from_id(self,id):
         """Retrieves library item given id parameter"""
 
-        for object in self._holdings: #cycles through every object in holdings list, if a match is made, return object
+        for object in self._holdings:                               #cycles through every object in holdings list, if a match is made, return object
 
             if id == object.get_library_item_id():
                 return object
 
         list_of_ids = []
 
-        for object in self._holdings: #creating a list of ids to check if id does not match an object in holdings list
+        for object in self._holdings:                               #creating a list of ids to check if id does not match an object in holdings list
             list_of_ids.append(id)
 
         if id not in list_of_ids:
@@ -217,14 +217,14 @@ class Library:
     def get_patron_from_id(self,id):
         """Retrieves patron item given id parameter"""
 
-        for object in self._members:  # cycles through every object in members list, if a match is made, return object
+        for object in self._members:                                # cycles through every object in members list, if a match is made, return object
 
             if id == object.get_patron_id():
                 return object
 
         list_of_members = []
 
-        for object in self._members:  # creating a list of members to check if id does not match an object in holdings list
+        for object in self._members:                                # creating a list of members to check if id does not match an object in holdings list
             list_of_members.append(id)
 
         if id not in list_of_members:
@@ -234,7 +234,7 @@ class Library:
     def check_out_library_item(self,patronID,itemID):
         """updates Patron's checked out items if itemID and patronID are valid and available"""
 
-        #conditions for if the library item is not able to be checked out for various reasons
+                                                                    #conditions for if the library item is not able to be checked out for various reasons
 
         item = self.get_library_item_from_id(itemID)
         patron = self.get_patron_from_id(patronID)
@@ -255,9 +255,9 @@ class Library:
             else:
                 pass
 
-        #If the library item is able to be checked out...
+                                                                    #If the library item is able to be checked out...
 
-        # If the patron is someone who requested the item, then clear the patron's request for the item
+                                                                    # If the patron is someone who requested the item, then clear the patron's request for the item
 
         item.set_checked_out_by(patron)
 
@@ -283,9 +283,9 @@ class Library:
 
             return "item already in library"
 
-        #update the Patron's checked_out_items by using Library item ID
+                                                                    # update the Patron's checked_out_items by using Library item ID
 
-        for patron in self._members: # find out which member checked out the library item
+        for patron in self._members:                                # find out which member checked out the library item
 
             if libraryitem in patron.get_checked_out_items():
 
