@@ -275,7 +275,7 @@ class Library:
 
         libraryitem = self.get_library_item_from_id(itemID)
 
-        if libraryitem not in self._holdings: #if item is not in holdings list
+        if libraryitem not in self._holdings:                       #if item is not in holdings list
 
             return "item not found"
 
@@ -291,11 +291,11 @@ class Library:
 
                 patron.remove_library_item(libraryitem)
 
-        if libraryitem.get_requested_by() != None: #If item is requested put on hold shelf
+        if libraryitem.get_requested_by() != None:                  # If item is requested put on hold shelf
 
             libraryitem.set_location("ON_HOLD_SHELF")
 
-        else: #If item is not requested put on shelf
+        else:                                                       #If item is not requested put on shelf
 
             libraryitem.set_location("ON_SHELF")
 
@@ -318,14 +318,14 @@ class Library:
         if libraryitem.get_requested_by() != None:
             return "item already on hold"
 
-        libraryitem.set_requested_by(patron) #update item requested by status
+        libraryitem.set_requested_by(patron)                        # update item requested by status
 
         if libraryitem.get_location() == "ON_SHELF":
             libraryitem.set_location("ON_HOLD_SHELF")
 
         return "request successful"
 
-    def pay_fine(self,patronID,dollars): #patron is paying the fine with dollar amount as parameter
+    def pay_fine(self,patronID,dollars):                            # patron is paying the fine with dollar amount as parameter
         """amends the fine by reducing the fine on account by dollar amount"""
 
         patron = self.get_patron_from_id(patronID)
@@ -337,20 +337,20 @@ class Library:
 
         return "payment successful"
 
-    def increment_current_date(self): #charge patrons fine for overdue items
+    def increment_current_date(self):                               # charge patrons fine for overdue items
         """increase each Patron's fines by 10 cents for each overdue LibraryItem checked out"""
 
         self._current_date += 1
 
-        # for loop for every member
-        for patron in self._members:# for each patron, a for loop for their checked_out_list to check each item
+                                                                                 # for loop for every member
+        for patron in self._members:                                             # for each patron, a for loop for their checked_out_list to check each item
 
-            for item in patron.get_checked_out_items(): #checks each item in patron's checked out list
+            for item in patron.get_checked_out_items():                          #checks each item in patron's checked out list
 
-                days_borrowed = self._current_date - item.get_date_checked_out() #how many each item was borrowed
+                days_borrowed = self._current_date - item.get_date_checked_out() # how many each item was borrowed
                 if days_borrowed > item.get_check_out_length():
 
-                    patron.amend_fine(0.10) #adds 10 cents to fine per item
+                    patron.amend_fine(0.10)                                      # adds 10 cents to fine per item
 
 
 
