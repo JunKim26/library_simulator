@@ -352,34 +352,38 @@ class Library:
 
                     patron.amend_fine(0.10)                                      # adds 10 cents to fine per item
 
+def main():
+    #Example Usage
+    b1 = Book("345", "Phantom Tollbooth", "Juster")
+    a1 = Album("456", "...And His Orchestra", "The Fastbacks")
+    m1 = Movie("567", "Laputa", "Miyazaki")
+
+    p1 = Patron("abc", "Felicity")
+    p2 = Patron("bcd", "Waldo")
+
+    lib = Library()
+    lib.add_library_item(b1)
+    lib.add_library_item(a1)
+    lib.add_library_item(m1)
+    lib.add_patron(p1)
+    lib.add_patron(p2)
+
+    print(lib.request_library_item("abc", "456"))
+    print(a1.get_location())
+    print(lib.check_out_library_item("bcd", "456"))
+    print(lib.check_out_library_item("abc", "456"))
+    print(a1.get_location())
 
 
-#Example Usage
-b1 = Book("345", "Phantom Tollbooth", "Juster")
-a1 = Album("456", "...And His Orchestra", "The Fastbacks")
-m1 = Movie("567", "Laputa", "Miyazaki")
+    for i in range(57):
+        lib.increment_current_date()                                                # 57 days pass
 
-p1 = Patron("abc", "Felicity")
-p2 = Patron("bcd", "Waldo")
-
-lib = Library()
-lib.add_library_item(b1)
-lib.add_library_item(a1)
-lib.add_library_item(m1)
-lib.add_patron(p1)
-lib.add_patron(p2)
-
-print(lib.request_library_item("abc", "456"))
-print(a1.get_location())
-print(lib.check_out_library_item("bcd", "456"))
-print(lib.check_out_library_item("abc", "456"))
-print(a1.get_location())
+    p1_fine = p1.get_fine_amount()
+    print(p1_fine)
+    print(lib.pay_fine("bcd", p1_fine))
+    print(lib.return_library_item("456"))
 
 
-for i in range(57):
-    lib.increment_current_date()                                                # 57 days pass
+if __name__ == '__main__':
+    main()
 
-p1_fine = p1.get_fine_amount()
-print(p1_fine)
-print(lib.pay_fine("bcd", p1_fine))
-print(lib.return_library_item("456"))
