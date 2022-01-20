@@ -1,4 +1,4 @@
-# Library_Simulator
+# Library Simulator
 
 
 There are 3 classes: LibraryItem, Patron and Library classes, and the three other classes that inherit from LibraryItem (Book, Album and Movie).  All data members of each class are marked as *private*.
