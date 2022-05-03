@@ -3,7 +3,7 @@
 # Description: Program of a simulation of a library involving multiple classes.
 
 
-                                                                                    # define class LibraryItem
+# define class LibraryItem
 class LibraryItem:
     """Represents private values of a Library item object"""
 
@@ -67,7 +67,7 @@ class LibraryItem:
 
 
 
-                                                                                # define class Book/Album/Movie inheriting from Library Item class
+# define class Book/Album/Movie inheriting from Library Item class
 class Book(LibraryItem):
     """Represents private values of a book object, inherits from LibraryItem"""
 
@@ -120,7 +120,7 @@ class Movie(LibraryItem):
         """Returns check out length"""
         return 7
 
-                                                                                # define class Patron
+# define class Patron
 class Patron:
     """Represents private values of a patron object"""
 
@@ -164,7 +164,7 @@ class Patron:
         """Removes library item from checked out list"""
         self._checked_out_items.remove(item)
 
-                                                                                # define class Library
+
 class Library:
     """Represents a Library, which has collections of Library items and patrons. """
 
@@ -201,14 +201,15 @@ class Library:
     def get_library_item_from_id(self,id):
         """Retrieves library item given id parameter"""
 
-        for object in self._holdings:                                           # cycles through every object in holdings list, if a match is made, return object
+        for object in self._holdings:                                           
 
             if id == object.get_library_item_id():
                 return object
 
         list_of_ids = []
-
-        for object in self._holdings:                                           #creating a list of ids to check if id does not match an object in holdings list
+        
+        #creating a list of ids to check if id does not match an object in holdings list
+        for object in self._holdings:                                           
             list_of_ids.append(id)
 
         if id not in list_of_ids:
@@ -216,15 +217,16 @@ class Library:
 
     def get_patron_from_id(self,id):
         """Retrieves patron item given id parameter"""
-
-        for object in self._members:                                            # cycles through every object in members list, if a match is made, return object
+        
+        for object in self._members:                                            
 
             if id == object.get_patron_id():
                 return object
 
         list_of_members = []
-
-        for object in self._members:                                            # creating a list of members to check if id does not match an object in holdings list
+        
+         # creating a list of members to check if id does not match an object in holdings list
+        for object in self._members:                                            
             list_of_members.append(id)
 
         if id not in list_of_members:
@@ -234,8 +236,7 @@ class Library:
     def check_out_library_item(self,patronID,itemID):
         """updates Patron's checked out items if itemID and patronID are valid and available"""
 
-                                                                                # conditions for if the library item is not able to be checked out for various reasons
-
+        # conditions for if the library item is not able to be checked out for various reasons
         item = self.get_library_item_from_id(itemID)
         patron = self.get_patron_from_id(patronID)
 
@@ -255,16 +256,12 @@ class Library:
             else:
                 pass
 
-                                                                                # If the library item is able to be checked out...
-
-                                                                                # If the patron is someone who requested the item, then clear the patron's request for the item
+        # If the library item is able to be checked out...
+        # If the patron is someone who requested the item, then clear the patron's request for the item
 
         item.set_checked_out_by(patron)
-
         item.set_date_checked_out(self._current_date)
-
         item.set_location("CHECKED_OUT")
-
         patron.add_checked_out_items(item)
 
         return "check out successful"
@@ -275,28 +272,23 @@ class Library:
 
         libraryitem = self.get_library_item_from_id(itemID)
 
-        if libraryitem not in self._holdings:                                   # if item is not in holdings list
-
+        if libraryitem not in self._holdings:                                   
             return "item not found"
 
         if libraryitem.get_location() != "CHECKED_OUT":
-
             return "item already in library"
 
-                                                                                # update the Patron's checked_out_items by using Library item ID
-
-        for patron in self._members:                                            # find out which member checked out the library item
+        # update the Patron's checked_out_items by using Library item ID
+        # find out which member checked out the library item
+        for patron in self._members:                                           
 
             if libraryitem in patron.get_checked_out_items():
-
                 patron.remove_library_item(libraryitem)
 
-        if libraryitem.get_requested_by() != None:                              # If item is requested put on hold shelf
-
+        if libraryitem.get_requested_by() != None:                              
             libraryitem.set_location("ON_HOLD_SHELF")
 
-        else:                                                                   # If item is not requested put on shelf
-
+        else:                                                                   
             libraryitem.set_location("ON_SHELF")
 
         libraryitem.set_checked_out_by(None)
@@ -318,14 +310,15 @@ class Library:
         if libraryitem.get_requested_by() != None:
             return "item already on hold"
 
-        libraryitem.set_requested_by(patron)                                    # update item requested by status
+        libraryitem.set_requested_by(patron)                                    
 
         if libraryitem.get_location() == "ON_SHELF":
             libraryitem.set_location("ON_HOLD_SHELF")
 
         return "request successful"
-
-    def pay_fine(self,patronID,dollars):                                        # patron is paying the fine with dollar amount as parameter
+    
+    # patron is paying the fine with dollar amount as parameter
+    def pay_fine(self,patronID,dollars):                                        
         """amends the fine by reducing the fine on account by dollar amount"""
 
         patron = self.get_patron_from_id(patronID)
@@ -336,21 +329,23 @@ class Library:
         patron.amend_fine(-dollars)
 
         return "payment successful"
-
-    def increment_current_date(self):                                           # charge patrons fine for overdue items
+    
+     # charge patrons fine for overdue items
+    def increment_current_date(self):                                          
         """increase each Patron's fines by 10 cents for each overdue LibraryItem checked out"""
 
         self._current_date += 1
 
-                                                                                 # for loop for every member
-        for patron in self._members:                                             # for each patron, a for loop for their checked_out_list to check each item
+                                                                                
+        for patron in self._members:                                             
 
-            for item in patron.get_checked_out_items():                          #checks each item in patron's checked out list
+            for item in patron.get_checked_out_items():                          
 
-                days_borrowed = self._current_date - item.get_date_checked_out() # how many each item was borrowed
+                days_borrowed = self._current_date - item.get_date_checked_out() 
                 if days_borrowed > item.get_check_out_length():
-
-                    patron.amend_fine(0.10)                                      # adds 10 cents to fine per item
+                    
+                    # adds 10 cents to fine per item
+                    patron.amend_fine(0.10)                                     
 
 def main():
     #Example Usage
@@ -374,9 +369,9 @@ def main():
     print(lib.check_out_library_item("abc", "456"))
     print(a1.get_location())
 
-
+    # 57 days pass
     for i in range(57):
-        lib.increment_current_date()                                                # 57 days pass
+        lib.increment_current_date()                                               
 
     p1_fine = p1.get_fine_amount()
     print(p1_fine)
